@@ -26,9 +26,9 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-/* function getSkuFromProductItem(item) {
+function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
-} */
+}
 
 function arrayProducts(array) {
   const itemChild = document.querySelector('.items');
@@ -39,12 +39,12 @@ function arrayProducts(array) {
   }));
   for (let i = 0; i < obj.length; i += 1) {
     itemChild.appendChild(createProductItemElement(obj[i]));
-  }
+  } 
 }
 
-function cartItemClickListener(event) {
+async function cartItemClickListener(event) {
   // coloque seu código aqui
-  fetch(event)
+  await fetch(event)
     .then((response) => response.json())
     .then((data) => {
       const array = data.results;
@@ -52,12 +52,38 @@ function cartItemClickListener(event) {
     });
 }
 
-/* function createCartItemElement({ sku, name, salePrice }) {
+function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
-} */
+}
 
-window.onload = () => cartItemClickListener(API_URL);
+function insertItemCart(array) {
+  const objToAdd = {
+    sku: array.id,
+    name: array.title,
+    salePrice: array.price,
+  };
+  const li = createCartItemElement(objToAdd);
+  document.querySelector('.cart__items').appendChild(li);
+}
+
+async function addCartItemElement(id) {
+  const itemUrl = `https://api.mercadolibre.com/items/${id}`;
+  await fetch(itemUrl)
+    .then((response) => response.json())
+    .then((data) => insertItemCart(data))
+    .catch(() => new Error('Indisponível'));
+}
+
+window.onload = async () => {
+  await cartItemClickListener(API_URL);
+  const btnAddItem = document.querySelectorAll('.item__add');
+  const sku = document.querySelectorAll('.item__sku');
+  for (let i = 0; i < btnAddItem.length; i += 1) {
+    const id = sku[i].innerHTML;
+    btnAddItem[i].addEventListener('click', (() => addCartItemElement(id)));
+  }
+};
