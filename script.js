@@ -1,6 +1,32 @@
 const query = 'computador';
 const API_URL = `https://api.mercadolibre.com/sites/MLB/search?q=${query}`;
 
+/* function getLocalStorage() {
+
+}
+
+function setLocalStorage() {
+
+} */
+
+function totalPrice(param, valor) {
+  const valorLocalStorage = localStorage.getItem('total');
+  const spanPrice = document.querySelector('.total-price');
+  let total = parseFloat(valorLocalStorage);
+  if (valorLocalStorage === null) {
+    localStorage.setItem('total', (valor.toFixed(2)));
+    spanPrice.innerHTML = `${valor}`;
+  } else if (param === '+') {
+    total += valor;
+    localStorage.setItem('total', ((total.toFixed(2))));
+    spanPrice.innerHTML = `${total}`;
+  } else {
+    total -= valor;
+    localStorage.setItem('total', (total.toFixed(2)));
+    spanPrice.innerHTML = `${total}`;
+  }
+}
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -52,10 +78,17 @@ async function searchProducts(event) {
     });
 }
 
-function cartItemClickListener(event) {
+async function cartItemClickListener(event) {
   // coloque seu código aqui
   const cartItemList = document.querySelector('.cart__items');
-  cartItemList.removeChild(event.target);
+  if (event === 'clean') { // Apaga toda lista
+    cartItemList.innerHTML = '';
+  } else { // Apaga somente um evento da lista
+    const itemDeleted = event.target.innerText;
+    const valor = parseFloat(itemDeleted.slice(itemDeleted.indexOf('$') + 1));
+    await totalPrice('-', valor);
+    cartItemList.removeChild(event.target);
+  }
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -66,14 +99,16 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
-function insertItemCart(array) {
+async function insertItemCart(array) {
   const objToAdd = {
     sku: array.id,
     name: array.title,
     salePrice: array.price,
   };
+  await totalPrice('+', array.price);
   const li = createCartItemElement(objToAdd);
-  document.querySelector('.cart__items').appendChild(li);
+  const listItems = document.querySelector('.cart__items');
+  listItems.appendChild(li);
 }
 
 async function addCartItemElement(id) {
@@ -84,7 +119,28 @@ async function addCartItemElement(id) {
     .catch(() => new Error('Indisponível'));
 }
 
+function initialRenderization() {
+/*   if (localStorage.getItem('cartItemList') === null) {
+    localStorage.setItem('cartItemList', ([]));
+  } else {
+    getLocalStorage();
+  } */
+}
+
+async function emptyCart() {
+  const btnEmptyCart = document.querySelector('.empty-cart');
+  btnEmptyCart.addEventListener('click', () => {
+  localStorage.clear();
+  const spanPrice = document.querySelector('.total-price');
+  spanPrice.innerHTML = '';
+  cartItemClickListener('clean'); // Limpar todos os campos da lista
+    initialRenderization();
+  });
+}
+
 window.onload = async () => {
+  initialRenderization();
+  emptyCart();
   await searchProducts(API_URL);
   const btnAddItem = document.querySelectorAll('.item__add');
   const sku = document.querySelectorAll('.item__sku');
