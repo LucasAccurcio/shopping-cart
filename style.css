@@ -61,7 +61,7 @@
   Referência:  https://dev.to/vaishnavme/displaying-loading-animation-on-fetch-api-calls-1e5m
 */
 
-.loading2 {
+/* .loading {
   width: 2rem;
   height: 2rem;
   border: 5px solid #f3f3f3;
@@ -71,7 +71,7 @@
   visibility: hidden;
   animation: spin 1s infinite linear;
 }
-.loading2.display {
+.loading.display {
   visibility: visible;
 }
 @keyframes spin {
@@ -81,4 +81,4 @@
   to {
       transform: rotate(360deg);
   }
-}
+} */

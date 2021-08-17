@@ -72,30 +72,25 @@ function showProducts(array) {
 function displayLoading() {
   const container = document.querySelector('.container');
   const loader = document.createElement('span');
-  loader.innerHTML = 'loading';
+  loader.innerHTML = 'loading...';
   loader.classList.add('loading');
   container.before(loader);
-  setTimeout(() => {
-    loader.remove();
-  }, 5000);
 }
 
 function hideLoading() {
   const loader = document.querySelector('.loading');
-  loader.remove();
+    loader.remove();
 }
 
 async function searchProducts(event) {
+  displayLoading();
   await fetch(event)
-  .then((response) => {
-    displayLoading();
-    return response.json();
-  })
+  .then((response) => response.json())
   .then((data) => {
-      hideLoading();
-      const array = data.results;
-      showProducts(array);
-    });
+    hideLoading();
+    const array = data.results;
+    showProducts(array);
+  });
 }
 
 async function cartItemClickListener(event) {
