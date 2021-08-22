@@ -4,6 +4,14 @@
   width: 100%;
 }
 
+header {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: yellow;
+}
+
 .items {
   display: flex;
   flex-basis: 70%;
@@ -68,29 +76,28 @@
 .total-price-text.display {
   visibility: visible;
 }
-/* 
-  Animação Loading 
-  Referência:  https://dev.to/vaishnavme/displaying-loading-animation-on-fetch-api-calls-1e5m
-*/
 
-/* .loading {
-  width: 2rem;
-  height: 2rem;
-  border: 5px solid #f3f3f3;
-  border-top: 6px solid #9c41f2;
-  border-radius: 100%;
-  margin: auto;
-  visibility: hidden;
-  animation: spin 1s infinite linear;
+#logo-image {
+  width: 150px;
+  margin-right: 20px; 
 }
-.loading.display {
-  visibility: visible;
+
+.input-search {
+  width: 350px;
+  height: 30px;
+  margin-right: 3px;
+  border: 1px solid white;
+  border-radius: 3px;
 }
-@keyframes spin {
-  from {
-      transform: rotate(0deg);
-  }
-  to {
-      transform: rotate(360deg);
-  }
-} */
+
+#btn-search {
+  height: 35px;
+  border-radius: 3px;
+  border: 0px solid white;
+  background-color: white;
+}
+
+#btn-search:hover{
+  cursor: pointer;
+  background-color: rgb(238, 238, 238);
+}

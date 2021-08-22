@@ -1,17 +1,3 @@
-const query = 'computador';
-const API_URL = `https://api.mercadolibre.com/sites/MLB/search?q=${query}`;
-
-/* function setLocalStorage(obj, param) {
-  const cart = JSON.parse(localStorage.getItem('cartItemList'));
-  if (param === '+') {
-    cart.push(obj);
-    localStorage.setItem('cartItemList', JSON.stringify(cart));
-  } else {
-    const deletedCartItem = cart.filter((element) => element.sku !== obj);
-    localStorage.setItem('cartItemList', JSON.stringify(deletedCartItem));   
-  }
-} */
-
 function totalPrice(param, valor) {
   const valorLocalStorage = localStorage.getItem('total');
   const spanPrice = document.querySelector('.total-price');
@@ -58,12 +44,9 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-/* function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-} */
-
 function showProducts(array) {
   const itemChild = document.querySelector('.items');
+  itemChild.innerHTML = '';
   const obj = array.map((curr) => ({ 
     sku: curr.id,
     name: curr.title,
@@ -112,10 +95,8 @@ function cartItemClickListener(event) {
     const valor = parseFloat(itemDeleted.slice(itemDeleted.indexOf('$') + 1));
     // No item clicado, eu extraio o valor para remover do Valor Total
     totalPrice('-', valor);
-    // const id = itemDeleted.slice(5, 18);
     cartItemList.removeChild(event.target);
     setLocalStorage(cartItemList);
-    // será que consigo fazer um loop e encontrar em qual posição da lista foi clicado???
   }
 }
 
@@ -144,28 +125,15 @@ function insertItemCart(array) {
   };
   totalPrice('+', array.price);
   apendItemToCart(objToAdd);
-  // setLocalStorage(objToAdd, '+');
 }
 
-/* function getLocalStorage() {
-  const loadCart = JSON.parse(localStorage.getItem('cartItemList'));
-  const recoverTotal = loadCart.reduce((acc, value) => acc + value.salePrice, 0);
-  const spanPrice = document.querySelector('.total-price');
-  spanPrice.innerHTML = recoverTotal;
-  if (loadCart.length > 0) {
-    for (let i = 0; i < loadCart.length; i += 1) {
-      apendItemToCart(loadCart[i]);
-    }
-  }
-} */
-
 function getLocalStorage() {
-  const localStorageData = localStorage.getItem('cartItemList'); // recupera lista do LocalStorage e armazena na variável localStorageDate
+  const localStorageData = localStorage.getItem('cartItemList'); // recupera lista que é uma STRING do LocalStorage e armazena na variável localStorageDate
   const arrayList = localStorageData.split('</li>'); // com a string gerada, cria um array de cada <li>
   arrayList.pop(); // Remove último item do array que será sempre vazio
   arrayList.forEach((item, index) => {
     arrayList[index] = item.replace('<li class="cart__item">', ''); // remove a tag <li class="cart__item"> do inicio de cada item do array
-    const alias = arrayList[index]; // criei um apelido para encurtar o caminho
+    const alias = arrayList[index]; // criei um apelido para encurtar o caminho e o Lint não reclamar
     const obj = { // Crio um objeto de acordo com o que é recebido pela função 'apendItemToCart'
       sku: alias.slice(5, alias.indexOf(' |')),
       name: alias.slice(alias.indexOf('NAME: ') + 6, alias.indexOf(' | P')),
@@ -208,9 +176,8 @@ function emptyCart() {
   });
 }
 
-window.onload = async () => {
-  initialRenderization();
-  emptyCart();
+async function newSearch(query = 'computador') {
+  const API_URL = `https://api.mercadolibre.com/sites/MLB/search?q=${query}`;
   await searchProducts(API_URL);
   const btnAddItem = document.querySelectorAll('.item__add');
   const sku = document.querySelectorAll('.item__sku');
@@ -218,4 +185,15 @@ window.onload = async () => {
     const id = sku[i].innerHTML;
     btnAddItem[i].addEventListener('click', (() => addCartItemElement(id)));
   }
+}
+
+window.onload = async () => {
+  initialRenderization();
+  emptyCart();
+  newSearch();
+  const btnSearch = document.querySelector('#btn-search');
+  btnSearch.addEventListener('click', () => {
+    const query = document.querySelector('.input-search').value;
+    newSearch(query);
+  });
 };
