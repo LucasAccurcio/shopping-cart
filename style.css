@@ -56,6 +56,18 @@
   text-align: center;
 }
 
+.total-price-text {
+  visibility: hidden;
+  text-align: center;
+  font-size: large;
+  font-weight: bold;
+  border: solid 2px blue;
+  border-radius: 5px;
+}
+
+.total-price-text.display {
+  visibility: visible;
+}
 /* 
   Animação Loading 
   Referência:  https://dev.to/vaishnavme/displaying-loading-animation-on-fetch-api-calls-1e5m
