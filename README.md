@@ -3,7 +3,7 @@
 
 ## Contexto
 
-Neste projeto foi implementado várias funções utilizando as Higher Order Functions do JavaScript, para conseguir filtrar e entregar os dados da melhor forma possível.
+Neste projeto, foi criado um ecommerce que faz requisições para uma API do Mercado Livre, para poder renderizar os produtos e exibir na tela. O carrinho de compras fica armazenado no LocalStorage, caso o cliente sai e volte novamente, o carrinho permanece inalterado.
 
 ## Técnologias usadas
 
