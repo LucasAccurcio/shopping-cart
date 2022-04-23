@@ -86,7 +86,6 @@ function setLocalStorage(list) {
 }
 
 function cartItemClickListener(event) {
-  // coloque seu código aqui
   const cartItemList = document.querySelector('.cart__items');
   if (event === 'clean') { // Apaga toda lista
     cartItemList.innerHTML = '';
@@ -158,9 +157,7 @@ async function addCartItemElement(id) {
 function initialRenderization() {
   if (localStorage.getItem('cartItemList') === null) {
     localStorage.setItem('cartItemList', JSON.stringify([]));
-  } else {
-    getLocalStorage();
-  }
+  };
 }
 
 function emptyCart() {
@@ -187,7 +184,7 @@ async function newSearch(query = 'computador') {
   }
 }
 
-window.onload = async () => {
+window.onload = () => {
   initialRenderization();
   emptyCart();
   newSearch();
